@@ -1,5 +1,6 @@
 import random
 
+
 def guess(x):
     random_number = random.randint(1, x)
 
@@ -16,4 +17,18 @@ def guess(x):
             print("Your guess is too low, try again.")
             print("--------------------------------")
 
-guess(int(input("enter a number: ")))
+
+def computer_guess(x, min_val=1, max_val=100):
+    c_guess = random.randint(min_val, max_val)
+    if c_guess > x:
+        print(f"Wrong. Too high. Computer guessed {c_guess}")
+        computer_guess(x, min_val, max_val - 1)
+    elif c_guess < x:
+        print(f"Wrong. Too low. Computer guessed {c_guess}")
+        computer_guess(x, min_val + 1, max_val)
+    else:
+        print(f"Yay. The computer guessed right. The number was: {x}.")
+
+
+# guess(int(input("enter a number: ")))
+computer_guess(int(input("enter a number you want the computer to guess between 1-100: ")))
