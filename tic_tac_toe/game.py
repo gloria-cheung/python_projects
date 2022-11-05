@@ -1,6 +1,6 @@
 class TicTacToe:
     def __init__(self):
-        self.board = [" " for i in range(9)]  # [" ", " ", " ", " ", " ", " ", " ", " ", " "]
+        self.board = [" " for _ in range(9)]  # [" ", " ", " ", " ", " ", " ", " ", " ", " "]
         self.current_winner = None
 
     def print_board(self):
@@ -23,3 +23,8 @@ class TicTacToe:
     def available_moves(self):
         return [i for (i, spot) in enumerate(self.board) if spot == " "]
 
+    def empty_squares(self):
+        return " " in self.board
+
+    def num_empty_squares(self):
+        return self.board.count(" ")
