@@ -1,0 +1,3 @@
+[submodule "quiz_game"]
+	path = quiz_game
+	url = git@github.com:gloria-cheung/quiz_game.git
