@@ -24,7 +24,7 @@ def play(game, x_player, o_player, print_game=True):
 
             if game.current_winner:
                 if print_game:
-                    print(f"{letter} + wins!")
+                    print(f"{letter} wins!")
                 return letter
 
             letter = "O" if letter == "X" else "X"
