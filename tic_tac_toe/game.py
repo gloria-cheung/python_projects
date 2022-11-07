@@ -7,6 +7,7 @@ class TicTacToe:
         self.current_winner = None
 
     def print_board(self):
+        # prints the board at current state of the game
         board = [[self.board[i], self.board[i + 1], self.board[i + 2]] for i in range(0, 9, 3)]
         for row in board:
             result = "| "
@@ -16,6 +17,7 @@ class TicTacToe:
 
     @staticmethod
     def print_board_nums():
+        # prints the board with index at each spot
         board = [[i, i + 1, i + 2] for i in range(0, 9, 3)]
         for row in board:
             result = "| "
@@ -33,6 +35,7 @@ class TicTacToe:
         return self.board.count(" ")
 
     def make_move(self, square, letter):
+        # if square is empty, reassign board at that square to be letter and return True, otherwise False
         if self.board[square] == " ":
             self.board[square] = letter
             if self.winner(square, letter):
@@ -42,10 +45,11 @@ class TicTacToe:
             return False
 
     def winner(self, square, letter):
+        # checks to see if winner based on the move the player made onto the square
         # check row
         row_idx = square // 3
         target_row = self.board[row_idx * 3: row_idx * 3 + 3]
-        if all([spot == letter for spot in target_row):
+        if all([spot == letter for spot in target_row]):
             return True
 
         #check col

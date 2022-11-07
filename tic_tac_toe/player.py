@@ -23,6 +23,7 @@ class HumanPlayer(Player):
         super().__init__(letter)
 
     def get_move(self, game):
+        #check to see if spot chosen by user is empty
         valid_square = False
         val = None
         while not valid_square:
