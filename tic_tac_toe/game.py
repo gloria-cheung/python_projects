@@ -1,3 +1,6 @@
+import math
+
+
 class TicTacToe:
     def __init__(self):
         self.board = [" " for _ in range(9)]  # [" ", " ", " ", " ", " ", " ", " ", " ", " "]
@@ -37,3 +40,31 @@ class TicTacToe:
             return True
         else:
             return False
+
+    def winner(self, square, letter):
+        # check row
+        row_idx = square // 3
+        target_row = self.board[row_idx * 3: row_idx * 3 + 3]
+        if all([spot == letter for spot in target_row):
+            return True
+
+        #check col
+        col_idx = square // 3
+        target_col = [self.board[i] for i in range(0,9) if (i - col_idx) % 3 == 0]
+        if all([spot == letter for spot in target_col]):
+            return True
+
+        #check diagonal [0,2,4,6,8]
+        if square % 2 == 0:
+            diagonal1 = [self.board[i] for i in [0, 4, 8]]
+            diagonal2 = [self.board[i] for i in [2,4,6]]
+            if all([spot == letter for spot in diagonal1]) or all([spot == letter for spot in diagonal2]):
+                return True
+        #if after checking row, col and diagonal and still fail:
+        return False
+
+
+
+
+
+
