@@ -1,1 +1,28 @@
-# https://www.amazon.ca/Canceling-Headphones-Lightweight-Srhythm-Comfortable/dp/B083S6Q8VK/ref=sr_1_7?keywords=noise%2Bcancelling%2Bheadphones%2Bbluetooth&qid=1667958409&qu=eyJxc2MiOiI2LjM3IiwicXNhIjoiNS43MyIsInFzcCI6IjQuOTUifQ%3D%3D&sprefix=noise%2Caps%2C122&sr=8-7&th=1
+import os
+
+from bs4 import BeautifulSoup
+import requests
+from smtplib import SMTP
+from dotenv import load_dotenv
+
+response = requests.get("https://ca.camelcamelcamel.com/product/B083S6Q8VK", headers={"Accept-Language": "en-US,en;q=0.9", "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36"})
+
+soup = BeautifulSoup(response.text, "html.parser")
+price = float(soup.select_one("span span", class_="green").getText()[1:])
+title = soup.select_one("h2 a").getText()
+link_to_amazon = soup.select_one("p a").get("href")
+
+
+def send_email():
+    load_dotenv()
+    email = os.getenv("email")
+    password = os.getenv("password")
+
+    server = SMTP("smtp.gmail.com", port=587)
+    server.starttls()
+    server.login(email, password)
+    SMTP.sendmail(self=server, from_addr="gloriacheung812@smtp.gmail.com", to_addrs="gloriacheung812@gmail.com", msg="Subject: Amazon Price Alert\n\n{} is now ${}. \n\n{}".format(title, price, link_to_amazon))
+
+
+if price < 69.99:
+    send_email()
