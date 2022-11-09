@@ -12,7 +12,7 @@ def get_data(date):
     soup = BeautifulSoup(response.text, "html.parser")
     titles = soup.find("div", class_="chart-results-list").select("div ul li ul li h3", id="title-of-a-story")
 
-    # reformatting the song title and removing uneeded chars
+    # reformatting the song title and removing unneeded chars
     return [item.getText().replace("\n", "").replace("\t", "") for item in titles]
 
 
@@ -33,7 +33,7 @@ def get_song_uris(titles, sp, year):
     for title in titles:
         # try to see if track is available on spotify, if not will just skip over that song title
         try:
-            result = sp.search(q=f"year: {year} track: {title}", type="track")["tracks"]["items"][0]["album"]["uri"]
+            result = sp.search(q=f"year: {year} track: {title}", type="track")["tracks"]["items"][1]["uri"]
             song_uri_list.append(result)
         except IndexError:
             continue
@@ -47,10 +47,15 @@ def start():
     print(f"Fetching songs from {date}...")
     song_titles_list = get_data(date)
     sp = authenticate()
+
     current_user_id = sp.current_user()["id"]
     song_uri_list = get_song_uris(song_titles_list, sp, year)
 
     print("Creating private playlist on Spotify...")
+    new_playlist = sp.user_playlist_create(user=current_user_id, name=f"{date} Billboard 100", public=False)
+    sp.playlist_add_items(playlist_id=new_playlist["id"], items=song_uri_list)
+
+    print("Playlist created! Check it out on spotify")
 
 
 start()
