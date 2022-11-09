@@ -1,0 +1,1 @@
+# https://www.amazon.ca/Canceling-Headphones-Lightweight-Srhythm-Comfortable/dp/B083S6Q8VK/ref=sr_1_7?keywords=noise%2Bcancelling%2Bheadphones%2Bbluetooth&qid=1667958409&qu=eyJxc2MiOiI2LjM3IiwicXNhIjoiNS43MyIsInFzcCI6IjQuOTUifQ%3D%3D&sprefix=noise%2Caps%2C122&sr=8-7&th=1
