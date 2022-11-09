@@ -1,9 +1,9 @@
 import os
-
 from bs4 import BeautifulSoup
 import requests
 from smtplib import SMTP
 from dotenv import load_dotenv
+
 
 response = requests.get("https://ca.camelcamelcamel.com/product/B083S6Q8VK", headers={"Accept-Language": "en-US,en;q=0.9", "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36"})
 
