@@ -1,5 +1,8 @@
 from flask import Flask, render_template, request
 import requests
+from smtplib import SMTP
+from dotenv import load_dotenv
+import os
 app = Flask(__name__)
 
 
@@ -30,7 +33,16 @@ def contact():
     if request.method == "GET":
         message = "Contact Me"
     elif request.method == "POST":
-        print(request.form)
+        # send email
+        load_dotenv()
+        email = os.getenv("email")
+        password = os.getenv("password")
+
+        server = SMTP("smtp.gmail.com", port=587)
+        server.starttls()
+        server.login(email, password)
+        SMTP.sendmail(self=server, from_addr="gloriacheung812@smtp.gmail.com", to_addrs="gloriacheung812@gmail.com",
+                      msg="Subject: Blog Contact Form \n\nMessage from {} at {}: \n\n{}".format(request.form["name"], request.form["email"], request.form["message"]))
         message = "Successfully sent message"
 
     return render_template("contact.html", message=message)
