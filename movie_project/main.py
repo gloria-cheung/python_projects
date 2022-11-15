@@ -1,8 +1,7 @@
-from flask import Flask, render_template, redirect, url_for, request
+from flask import Flask, render_template, redirect
 from flask_bootstrap import Bootstrap
 from model import db, Movie
 from form import EditForm
-import requests
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///movies.db"
@@ -31,9 +30,18 @@ def edit(movie_id):
         found_movie.rating = form.rating.data
         found_movie.review = form.review.data
         db.session.commit()
-        return redirect('/')
+        return redirect("/")
 
     return render_template("edit.html", movie=found_movie, form=form)
+
+
+@app.route("/delete/<int:movie_id>", methods=["POST"])
+def delete(movie_id):
+    found_movie = Movie.query.get(movie_id)
+    db.session.delete(found_movie)
+    db.session.commit()
+    return redirect("/")
+
 
 if __name__ == '__main__':
     app.run(debug=True)
