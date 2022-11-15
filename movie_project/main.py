@@ -24,7 +24,7 @@ with app.app_context():
 
 @app.route("/")
 def home():
-    movies = Movie.query.all()
+    movies = Movie.query.order_by(Movie.rating).all()
     return render_template("index.html", movies=movies)
 
 
