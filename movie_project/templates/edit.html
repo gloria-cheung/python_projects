@@ -13,6 +13,24 @@
 {% block content %}
 <div class="content">
   <h1 class="heading">Movie Title</h1>
-    <p class="description">Edit Movie Rating</p>
-  </div>
+  <p class="description">Edit Movie Rating</p>
+  <form method="POST" action="{{ url_for('edit', movie_id=movie.id) }}" novalidate>
+    {{ form.csrf_token }}
+    {{ form.rating.label }} {{ form.rating(class="form-control") }}
+    {% if form.rating.errors %}
+      {% for error in form.rating.errors %}
+          <p>{{ error }}</p>
+      {% endfor %}
+    {% endif %}
+
+    {{ form.review.label }} {{ form.review(class="form-control") }}
+    {% if form.review.errors %}
+      {% for error in form.review.errors %}
+          <span>{{ error }}</span>
+      {% endfor %}
+    {% endif %}
+    <br>
+    {{ form.submit }}
+</form>
+</div>
 {% endblock %}
