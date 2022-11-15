@@ -12,5 +12,18 @@
 {% block content %}
 <div class="content">
     <h1 class="heading">Add a Movie</h1>
+    <form method="POST" action="{{ url_for('add') }}" novalidate>
+    {{ form.csrf_token }}
+
+    {{ form.title.label }} {{ form.title(class="form-control") }}
+    {% if form.title.errors %}
+      {% for error in form.title.errors %}
+          <p>{{ error }}</p>
+      {% endfor %}
+    {% endif %}
+    <br>
+
+    {{ form.submit }}
+</form>
 </div>
 {% endblock %}
