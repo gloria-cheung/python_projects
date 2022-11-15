@@ -22,7 +22,7 @@
   {% for movie in movies: %}
   <div class="card" >
     <div class="front" style="background-image: url('{{movie.img_url}}');">
-        <p class="large">{{ movie.id }}</p>
+        <p class="large">{{ (movies.index(movie) - movies|length)| abs }}</p>
     </div>
     <div class="back">
       <div>
