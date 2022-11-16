@@ -39,6 +39,11 @@ def home():
 @app.route('/register', methods=["GET", "POST"])
 def register():
     if request.method == "POST":
+        # check if email already used
+        if User.query.filter_by(email=request.form["email"]).first():
+            flash("Email already registered, go to login page.")
+            return redirect("/register")
+
         # hash the password before save to db
         hashed_password = generate_password_hash(request.form["password"], salt_length=8)
         new_user = User(
@@ -59,8 +64,16 @@ def login():
     if request.method == "POST":
         # check email and password against user in db -> then login using flask_login
         user = User.query.filter_by(email=request.form["email"]).first()
+
+        if not user:
+            flash("That email does not exist, please try again.")
+            return redirect("/login")
+
         if check_password_hash(user.password, request.form["password"]):
             login_user(user)
+        else:
+            flash("Password incorrect, please try again.")
+            return redirect("/login")
         return render_template("secrets.html", name=user.name)
     return render_template("login.html")
 
