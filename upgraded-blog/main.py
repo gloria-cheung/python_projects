@@ -1,23 +1,29 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 import requests
 from smtplib import SMTP
 from dotenv import load_dotenv
 import os
+from model import BlogPost, db
 app = Flask(__name__)
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///posts.db"
+db.init_app(app)
+
+with app.app_context():
+    db.create_all()
 
 
 @app.route("/")
 def index():
-    posts = requests.get("https://api.npoint.io/c790b4d5cab58020d391").json()
+    posts = BlogPost.query.all()
     return render_template("index.html", posts=posts)
 
 
 @app.route("/post/<int:id>")
 def post(id):
-    posts = requests.get("https://api.npoint.io/c790b4d5cab58020d391").json()
+    posts = BlogPost.query.all()
     found_post = None
     for post in posts:
-        if post["id"] == id:
+        if post.id == id:
             found_post = post
     return render_template("post.html", post=found_post)
 
