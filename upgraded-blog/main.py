@@ -1,11 +1,13 @@
 from flask import Flask, render_template, request, jsonify
-import requests
+from flask_bootstrap import Bootstrap
 from smtplib import SMTP
 from dotenv import load_dotenv
 import os
 from model import BlogPost, db
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///posts.db"
+app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
+Bootstrap(app)
 db.init_app(app)
 
 with app.app_context():
@@ -26,6 +28,11 @@ def post(id):
         if post.id == id:
             found_post = post
     return render_template("post.html", post=found_post)
+
+
+@app.route("/new-post")
+def create():
+    return render_template("make-post.html")
 
 
 @app.route("/about")
