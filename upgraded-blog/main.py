@@ -74,6 +74,13 @@ def update(id):
     return render_template("make-post.html", form=form, status="update", id=id)
 
 
+@app.route("/delete/<int:id>")
+def delete(id):
+    found_post = BlogPost.query.get(id)
+    db.session.delete(found_post)
+    db.session.commit()
+    return redirect("/")
+
 @app.route("/about")
 def about():
     return render_template("about.html")
