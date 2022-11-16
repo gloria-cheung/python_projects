@@ -26,8 +26,12 @@
   <div class="container">
     <div class="row">
       <div class="col-lg-8 col-md-10 mx-auto">
-        
-          <form method="POST" action="" novalidate>
+          {% if status == "create" %}
+            <form method="POST" action="{{ url_for('create') }}" novalidate>
+          {% else %}
+            <form method="POST" action="{{ url_for('update', id=id) }}" novalidate>
+          {% endif %}
+
               {{ form.csrf_token }}
               {{ form.title.label }} {{ form.title(class="form-control") }}
               {{ form.subtitle.label }} {{ form.subtitle(class="form-control") }}
