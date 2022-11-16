@@ -30,7 +30,7 @@
                             <span class="meta">
                                 Posted by
                                 <a href="#!">Gloria Cheung</a>
-                                on August 24, 2022
+                                {{ post["date"] }}
                             </span>
                         </div>
                     </div>
@@ -42,7 +42,7 @@
             <div class="container px-4 px-lg-5">
                 <div class="row gx-4 gx-lg-5 justify-content-center">
                     <div class="col-md-10 col-lg-8 col-xl-7">
-                        <p>{{post["body"]}}</p>
+                        <p>{{post["body"] | safe }}</p>
                     </div>
                 </div>
             </div>
