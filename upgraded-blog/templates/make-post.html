@@ -3,7 +3,7 @@
 {% block content %}
 {% include "header.html" %}
   <!-- Page Header -->
-  <header class="masthead" style="background-image: url('{{ url_for('static', filename='img/edit-bg.jpg')}}')">
+  <header class="masthead" style="background-image: url('{{ url_for('static', filename='assets/img/home-bg.jpg')}}')">
     <div class="overlay"></div>
     <div class="container">
       <div class="row">
@@ -21,8 +21,18 @@
     <div class="row">
       <div class="col-lg-8 col-md-10 mx-auto">
         
-          <!-- This is where the form will go -->
+          <form method="POST" action="" novalidate>
+              {{ form.csrf_token }}
+              {{ form.title.label }} {{ form.title(class="form-control") }}
+              {{ form.subtitle.label }} {{ form.subtitle(class="form-control") }}
+              {{ form.author.label }} {{ form.author(class="form-control") }}
+              {{ form.img_url.label }} {{ form.img_url(class="form-control") }}
+              {{ form.body.label }} {{ form.body() }}
+              {{ form.submit(class="btn btn-primary") }}
+          </form>
 
+           {{ ckeditor.load() }}
+           {{ ckeditor.config(name='body') }}
       </div>
     </div>
   </div>
