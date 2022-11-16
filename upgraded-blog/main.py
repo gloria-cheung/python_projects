@@ -55,12 +55,24 @@ def create():
     return render_template("make-post.html", form=form, status="create")
 
 
-@app.route("/edit-post/<int:id>", methods=["GET", "PATCH"])
+@app.route("/edit-post/<int:id>", methods=["GET", "POST"])
 def update(id):
     found_post = BlogPost.query.get(id)
     # populate form with post data
     form = CreatePostForm(obj=found_post)
-    return render_template("make-post.html", form=form, status="update")
+
+    # take all data from submitted form and update
+    if form.validate_on_submit():
+        found_post.title = form.title.data
+        found_post.subtitle = form.subtitle.data
+        found_post.author = form.author.data
+        found_post.img_url = form.img_url.data
+        found_post.body = form.body.data
+        db.session.commit()
+        return redirect(f"/post/{id}")
+
+    return render_template("make-post.html", form=form, status="update", id=id)
+
 
 @app.route("/about")
 def about():
