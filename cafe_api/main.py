@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, render_template, request, Response
 from flask_sqlalchemy import SQLAlchemy
 import random
 
@@ -56,11 +56,10 @@ def all():
 
 @app.route("/search")
 def search():
-    args = request.args
-    location = args.get('loc')
+    location = request.args.get('loc')
     cafes = Cafe.query.filter_by(location=location).all()
     if len(cafes) == 0:
-        return jsonify(error={"Not Found": "Sorry, we don't have a cafe at that location."})
+        return jsonify(error={"Not Found": "Sorry, we don't have a cafe at that location."}), 404
     else:
         result = [cafe.obj_to_dict() for cafe in cafes]
         return jsonify(cafes=result)
@@ -86,6 +85,18 @@ def create():
 
 
 ## HTTP PUT/PATCH - Update Record
+@app.route("/update-price/<cafe_id>", methods=["PATCH"])
+def update(cafe_id):
+    # new_price as query string
+    new_price = request.args.get("new_price")
+    found_cafe = Cafe.query.get(cafe_id)
+    # pass status code 404 in response
+    if not found_cafe:
+        return jsonify(error={"Not Found": "Sorry a cafe with that id was not found in the database."}), 404
+
+    found_cafe.coffee_price = new_price
+    db.session.commit()
+    return jsonify(success="Successfully updated the price.")
 
 ## HTTP DELETE - Delete Record
 
