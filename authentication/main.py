@@ -13,6 +13,7 @@ db.init_app(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+
 ##CREATE TABLE IN DB
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -72,10 +73,12 @@ def secrets():
 
 @app.route('/logout')
 def logout():
-    pass
+    logout_user()
+    return redirect("/")
 
 
 @app.route('/download')
+@login_required
 def download():
     return send_from_directory("static", "files/cheat_sheet.pdf")
 
