@@ -52,8 +52,15 @@ def create():
         db.session.add(new_post)
         db.session.commit()
         return redirect("/")
-    return render_template("make-post.html", form=form)
+    return render_template("make-post.html", form=form, status="create")
 
+
+@app.route("/edit-post/<int:id>", methods=["GET", "PATCH"])
+def update(id):
+    found_post = BlogPost.query.get(id)
+    # populate form with post data
+    form = CreatePostForm(obj=found_post)
+    return render_template("make-post.html", form=form, status="update")
 
 @app.route("/about")
 def about():
