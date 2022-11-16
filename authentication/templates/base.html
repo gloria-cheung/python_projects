@@ -27,8 +27,10 @@
         <a class="nav-link" href="{{ url_for('register') }}">Register</a>
       </li>
         {% endif %}
-<li class="nav-item">
+      <li class="nav-item">
+        {% if logged_in: %}
         <a class="nav-link" href="{{ url_for('logout') }}">Log Out</a>
+        {% endif %}
       </li>
     </ul>
 
