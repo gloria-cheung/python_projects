@@ -35,13 +35,17 @@ class BlogPost(db.Model):
     date = db.Column(db.String(250), nullable=False)
     body = db.Column(db.Text, nullable=False)
     img_url = db.Column(db.String(250), nullable=False)
+    author_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    author = relationship("User", back_populates="posts")
 
 
 class User(db.Model, UserMixin):
+    __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(250), nullable=False, unique=True)
     password = db.Column(db.String(250), nullable=False)
     name = db.Column(db.String(250), nullable=False)
+    posts = relationship("BlogPost", back_populates="author")
 
 
 with app.app_context():
@@ -127,7 +131,7 @@ def contact():
     return render_template("contact.html")
 
 
-@app.route("/new-post")
+@app.route("/new-post", methods=["GET", "POST"])
 @admin_only
 def add_new_post():
     form = CreatePostForm()
