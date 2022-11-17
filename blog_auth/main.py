@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, flash, abort, request
+from flask import Flask, render_template, redirect, url_for, flash, abort
 from flask_bootstrap import Bootstrap
 from flask_ckeditor import CKEditor
 from datetime import date
@@ -134,6 +134,10 @@ def show_post(post_id):
     form = CommentForm()
     print(form.validate_on_submit())
     if form.validate_on_submit():
+        if not current_user.is_authenticated:
+            flash("please login in order to leave a comment")
+            return redirect(url_for("login"))
+
         new_comment = Comment(
             text=form.body.data,
             author_id=int(current_user.get_id()),
@@ -142,7 +146,7 @@ def show_post(post_id):
         db.session.add(new_comment)
         db.session.commit()
         return redirect(url_for("show_post", post_id=post_id))
-    return render_template("post.html", post=requested_post, admin=current_user.get_id(), form=form, comments=requested_post.comments)
+    return render_template("post.html", post=requested_post, admin=current_user.get_id(), form=form, comments=requested_post.comments, logged_in=current_user.is_authenticated)
 
 
 @app.route("/about")
