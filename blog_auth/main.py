@@ -6,7 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
-from forms import CreatePostForm
+from forms import CreatePostForm, RegisterForm, LoginForm
 from flask_gravatar import Gravatar
 
 app = Flask(__name__)
@@ -20,6 +20,9 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 db.init_app(app)
 
+# Authenticate
+login_manager = LoginManager()
+login_manager.init_app(app)
 
 # CONFIGURE TABLES
 class BlogPost(db.Model):
@@ -33,28 +36,68 @@ class BlogPost(db.Model):
     img_url = db.Column(db.String(250), nullable=False)
 
 
+class User(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(250), nullable=False, unique=True)
+    password = db.Column(db.String(250), nullable=False)
+    name = db.Column(db.String(250), nullable=False)
+
+
 with app.app_context():
     db.create_all()
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(user_id)
 
 
 @app.route('/')
 def get_all_posts():
     posts = BlogPost.query.all()
-    return render_template("index.html", all_posts=posts)
+    return render_template("index.html", all_posts=posts, logged_in=current_user.is_authenticated)
 
 
-@app.route('/register')
+@app.route('/register', methods=["GET", "POST"])
 def register():
-    return render_template("register.html")
+    form = RegisterForm()
+    if form.validate_on_submit():
+        if User.query.filter_by(email=form.email.data).first():
+            flash("Email already used, please login.")
+            return redirect(url_for("login"))
+
+        hashed_password = generate_password_hash(form.password.data, salt_length=8)
+        new_user = User(
+            email=form.email.data,
+            password=hashed_password,
+            name=form.name.data
+        )
+        db.session.add(new_user)
+        db.session.commit()
+        login_user(new_user)
+        return redirect(url_for("get_all_posts"))
+    return render_template("register.html", form=form)
 
 
-@app.route('/login')
+@app.route('/login', methods=["GET", "POST"])
 def login():
-    return render_template("login.html")
+    form = LoginForm()
+    if form.validate_on_submit():
+        found_user = User.query.filter_by(email=form.email.data).first()
+        if not found_user:
+            flash("email not found, please register")
+            return redirect(url_for("register"))
+        if check_password_hash(found_user.password, form.password.data):
+            login_user(found_user)
+            return redirect(url_for("get_all_posts"))
+        else:
+            flash("password incorrect, please try again")
+    return render_template("login.html", form=form)
 
 
 @app.route('/logout')
 def logout():
+    logout_user()
     return redirect(url_for('get_all_posts'))
 
 
