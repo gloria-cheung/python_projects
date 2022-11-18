@@ -44,7 +44,7 @@
                 {% for comment in comments %}
                 <li>
                     <div class="commenterImage">
-                      <img src="https://t4.ftcdn.net/jpg/03/59/58/91/360_F_359589186_JDLl8dIWoBNf1iqEkHxhUeeOulx0wOC5.jpg"/>
+                      <img src="{{ comment.author.email | gravatar }}"/>
                     </div>
                     <div class="commentText">
                       <p>{{ comment.text | safe }}</p>
